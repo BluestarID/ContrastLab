@@ -65,7 +65,7 @@ ContrastLab helps designers, developers, and design-system engineers create acce
 ### 1. WCAG 2.1 Relative Luminance & Contrast Formula
 Relative luminance ($L$) represents the perceived brightness of a color normalized to $0$ (darkest black) and $1$ (lightest white), following the sRGB standard:
 
-$$\text{Linearize}(C) = \begin{cases} \frac{C}{12.92} & C \le 0.03928 \\[6pt] \left(\frac{C + 0.055}{1.055}\right)^{2.4} & C > 0.03928 \end{cases}$$
+$$\text{Linearize}(C) = \begin{cases} \frac{C}{12.92} & C \le 0.03928 \\ \left(\frac{C + 0.055}{1.055}\right)^{2.4} & C > 0.03928 \end{cases}$$
 
 $$L = 0.2126 \cdot R_{\text{linear}} + 0.7152 \cdot G_{\text{linear}} + 0.0722 \cdot B_{\text{linear}}$$
 
