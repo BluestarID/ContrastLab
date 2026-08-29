@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { BIAS_MODES } from "../types.js";
 import { generateHarmoniousPalette } from "../utils/harmony.js";
 import { isLightColor } from "../utils/colorMath.js";
-import { ShuffleIcon, PlusIcon, SparklesIcon, CheckIcon, LightbulbIcon } from "./Icons.js";
+import { ShuffleIcon, PlusIcon, SparklesIcon, CheckIcon } from "./Icons.jsx";
 
 export function SidebarGenerator({ palette, onAddColor }) {
   const [biasMode, setBiasMode] = useState(BIAS_MODES.ANY);
@@ -20,13 +20,13 @@ export function SidebarGenerator({ palette, onAddColor }) {
 
   useEffect(() => {
     handleGenerate();
-  }, [biasMode]);
+  }, [biasMode, handleGenerate]);
 
   useEffect(() => {
     if (swatches.length === 0) {
       handleGenerate();
     }
-  }, [palette]);
+  }, [palette, handleGenerate, swatches.length]);
 
   const handleCopy = (hex, e) => {
     e.stopPropagation();
@@ -62,8 +62,8 @@ export function SidebarGenerator({ palette, onAddColor }) {
               { id: BIAS_MODES.ANY, label: "Any", desc: "Full spectrum harmony" },
               { id: BIAS_MODES.LIGHT, label: "Light", desc: "Pastels & tints for dark backgrounds" },
               { id: BIAS_MODES.DARK, label: "Dark", desc: "Deep rich tones for light backgrounds" },
-              { id: BIAS_MODES.NEUTRAL, label: "Neutral", desc: "Low-saturation background greys" }
-            ].map(filter => (
+              { id: BIAS_MODES.NEUTRAL, label: "Neutral", desc: "Low-saturation background greys" },
+            ].map((filter) => (
               <button
                 key={filter.id}
                 type="button"
@@ -96,8 +96,8 @@ export function SidebarGenerator({ palette, onAddColor }) {
         </div>
 
         <div className="swatches-grid">
-          {swatches.map(swatch => {
-            const isLight = biasMode === BIAS_MODES.LIGHT || isLightColor(swatch.hex);
+          {swatches.map((swatch) => {
+            const isLight = isLightColor(swatch.hex);
             const isCopied = copiedHex === swatch.hex;
             const isAdded = recentlyAddedId === swatch.id;
 
@@ -120,7 +120,9 @@ export function SidebarGenerator({ palette, onAddColor }) {
                       title={`Copy ${swatch.hex}`}
                     >
                       {isCopied ? (
-                        <span className="copied-label"><CheckIcon size={12} /> Copied</span>
+                        <span className="copied-label">
+                          <CheckIcon size={12} /> Copied
+                        </span>
                       ) : (
                         <span className="hex-label">{swatch.hex}</span>
                       )}
@@ -155,7 +157,7 @@ export function SidebarGenerator({ palette, onAddColor }) {
 
       <div className="sidebar-footer">
         <p className="sidebar-footer-tip">
-          <LightbulbIcon size={14} /> <strong>Tip:</strong> Need to fix failing contrast? Choose <strong>Light</strong> or <strong>Dark</strong> to find accessible pair colors.
+          💡 <strong>Tip:</strong> Need to fix failing contrast? Choose <strong>Light</strong> or <strong>Dark</strong> to find accessible pair colors.
         </p>
       </div>
     </aside>

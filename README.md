@@ -1,6 +1,6 @@
 # ContrastLab — Color Palette & Accessibility Contrast Studio
 
-A single-page React web application designed for building color palettes, validating WCAG 2.1 contrast compliance, and generating harmonious colors with lightness biasing.
+A single-page React web application built with Vite designed for crafting color palettes, validating WCAG 2.1 contrast compliance across all color permutations, and generating harmonious tones with lightness biasing.
 
 ---
 
@@ -13,7 +13,7 @@ A single-page React web application designed for building color palettes, valida
   - **Light**: High lightness pastels and tints designed to contrast cleanly against dark backgrounds.
   - **Dark**: Low lightness, deep saturated tones designed to contrast cleanly against light backgrounds.
   - **Any**: Full dynamic spectrum harmony.
-- **Fast / Unlimited Shuffle**: Re-roll fresh suggestions instantly with one click.
+- **Fast / Unlimited Shuffle**: Re-roll fresh suggestions instantly with one click using the "Generate New Colors" action.
 - **1-Click Add**: Click the `+` button on any swatch to instantly add it to your palette.
 - **1-Click Copy**: Click the HEX code to copy it to your clipboard.
 
@@ -27,6 +27,7 @@ A single-page React web application designed for building color palettes, valida
   - Interactive reordering (move up / down / earlier / later).
   - Inline color picker to modify existing colors in place.
   - Color removal / deletion.
+  - Dynamic high-contrast index badges (`#1`, `#2`, etc.).
 - **Empty State**: Friendly CTA and preset loader when palette is cleared.
 
 ### 3. Tab B: Accessibility Contrast Checker
@@ -37,7 +38,7 @@ A single-page React web application designed for building color palettes, valida
   - One-click manual Refresh button recalculates all pairs instantly.
 - **Live Text Rendering**:
   - Real-time rendered sentence: `"The quick brown fox jumps over the lazy dog"` in actual foreground and background color combinations.
-  - Additional rendered interactive button pill and caption samples.
+  - Additional rendered interactive button with hover/active state simulation and caption samples.
 - **Accurate WCAG 2.1 Compliance Metrics**:
   - Exact gamma-corrected relative luminance formula:
     $$c_{\text{linear}} = \begin{cases} \frac{c}{12.92} & c \le 0.03928 \\ \left(\frac{c + 0.055}{1.055}\right)^{2.4} & c > 0.03928 \end{cases}$$
@@ -61,20 +62,43 @@ A single-page React web application designed for building color palettes, valida
 - **Primary Background**: `#FFFFFF`
 - **Accent Color**: `#307CFF`
 - **Typography**: Inter (UI labels) + JetBrains Mono / SFMono (Color values & ratios)
+- **Icons**: Lucide Icons via `lucide-react`
 - **Accessible Badges**: Clear icons (Checkmark / Cross) paired with high-contrast text and colors.
-- **Responsive**: Adapts gracefully across desktop, tablet, and mobile viewports.
+- **Responsive**: Adapts gracefully across desktop, tablet, and mobile viewports with a persistent sidebar and scrollable canvas.
 - **Accessibility**: Visible `:focus-visible` focus indicators and `prefers-reduced-motion` compliance.
 
 ---
 
-## How to Run
+## Getting Started
 
-### Option 1: Direct in Browser
-Double-click `index.html` or open it directly in any modern browser (Chrome, Arc, Safari, Firefox, Edge).
+### Prerequisites
+- Node.js (v18+)
+- `pnpm` (or `npm`)
 
-### Option 2: Local Python Server
-Run the included python runner:
+### Installation
 ```bash
-python3 serve.py
+pnpm install
 ```
-This opens `http://localhost:3000` automatically.
+*(or `npm install`)*
+
+### Development Server
+```bash
+pnpm dev
+```
+*(or `npm run dev`)*
+
+Starts the local development server at `http://localhost:3000`.
+
+### Production Build
+```bash
+pnpm build
+```
+*(or `npm run build`)*
+
+Compiles and bundles optimized production assets into the `dist/` folder.
+
+### Preview Production Build
+```bash
+pnpm preview
+```
+*(or `npm run preview`)*

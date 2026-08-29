@@ -29,7 +29,7 @@ export const STARTER_PRESETS = [
     colors: ["#FFFFFF", "#307CFF", "#0F172A", "#10B981", "#F8FAFC", "#F59E0B"]
   },
   {
-    name: "Modern SaaS Brand",
+    name: "Modern SaaS",
     colors: ["#FFFFFF", "#6366F1", "#0B0F19", "#E0E7FF", "#EC4899", "#14B8A6"]
   },
   {
@@ -37,7 +37,7 @@ export const STARTER_PRESETS = [
     colors: ["#FAFAF9", "#EA580C", "#1C1917", "#FEF3C7", "#78350F", "#44403C"]
   },
   {
-    name: "High Contrast Tech",
+    name: "High Contrast",
     colors: ["#000000", "#FFFFFF", "#0284C7", "#22C55E", "#E2E8F0", "#334155"]
   }
 ];

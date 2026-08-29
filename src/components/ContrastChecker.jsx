@@ -3,7 +3,7 @@ import {
   getContrastRatio,
   evaluateWCAG,
   hexToRgb,
-  formatRgb
+  formatRgb,
 } from "../utils/colorMath.js";
 import {
   RefreshIcon,
@@ -11,15 +11,44 @@ import {
   CrossIcon,
   AlertCircleIcon,
   EyeIcon,
-  SparklesIcon
-} from "./Icons.js";
+  SparklesIcon,
+} from "./Icons.jsx";
 
-function InteractivePreviewButton({ bgHex, fgHex }) {
+/**
+ * Interactive Preview Button Component
+ * Outline 1px solid FG color (outer border, always visible).
+ * On hover: Fill becomes FG color, Text becomes BG color.
+ * On click/press: Opacity lowers slightly (0.75).
+ * On mouse leave: Returns cleanly to default outline state.
+ */
+export function InteractivePreviewButton({ bgHex, fgHex }) {
+  const [isHovered, setIsHovered] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
+
+  const style = {
+    backgroundColor: isHovered ? fgHex : "transparent",
+    color: isHovered ? bgHex : fgHex,
+    border: "none",
+    outline: "1px solid " + fgHex,
+    opacity: isPressed ? 0.75 : 1,
+    transform: isPressed ? "scale(0.97)" : isHovered ? "translateY(-1px)" : "none",
+    transition: "all 0.15s cubic-bezier(0.16, 1, 0.3, 1)",
+    cursor: "pointer",
+    userSelect: "none",
+  };
+
   return (
     <button
       type="button"
       className="sample-pill-btn"
-      style={{ "--preview-bg": bgHex, "--preview-fg": fgHex }}
+      style={style}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        setIsPressed(false);
+      }}
+      onMouseDown={() => setIsPressed(true)}
+      onMouseUp={() => setIsPressed(false)}
       title="Hover or click to preview active/hover states"
     >
       Interactive Button Preview
@@ -31,7 +60,7 @@ export function ContrastChecker({
   snapshotPalette,
   isStale,
   onRefresh,
-  onSwitchToPalette
+  onSwitchToPalette,
 }) {
   const [filterMode, setFilterMode] = useState("all");
   const [sortMode, setSortMode] = useState("default");
@@ -64,7 +93,7 @@ export function ContrastChecker({
             bgRgb: formatRgb(hexToRgb(bg)),
             fgRgb: formatRgb(hexToRgb(fg)),
             ratio,
-            wcag
+            wcag,
           });
         }
       }
@@ -76,11 +105,11 @@ export function ContrastChecker({
     let result = [...contrastPairs];
 
     if (filterMode === "failing") {
-      result = result.filter(p => !p.wcag.aaNormal);
+      result = result.filter((p) => !p.wcag.aaNormal);
     } else if (filterMode === "passing") {
-      result = result.filter(p => p.wcag.aaNormal);
+      result = result.filter((p) => p.wcag.aaNormal);
     } else if (filterMode === "aaa") {
-      result = result.filter(p => p.wcag.aaaNormal);
+      result = result.filter((p) => p.wcag.aaaNormal);
     }
 
     if (sortMode === "lowest") {
@@ -93,8 +122,8 @@ export function ContrastChecker({
   }, [contrastPairs, filterMode, sortMode]);
 
   const totalCount = contrastPairs.length;
-  const passingAaCount = contrastPairs.filter(p => p.wcag.aaNormal).length;
-  const passingAaaCount = contrastPairs.filter(p => p.wcag.aaaNormal).length;
+  const passingAaCount = contrastPairs.filter((p) => p.wcag.aaNormal).length;
+  const passingAaaCount = contrastPairs.filter((p) => p.wcag.aaaNormal).length;
   const passRate = totalCount > 0 ? Math.round((passingAaCount / totalCount) * 100) : 0;
 
   return (
@@ -105,14 +134,12 @@ export function ContrastChecker({
             <AlertCircleIcon size={18} className="text-warning" />
             <div>
               <strong className="stale-title">Your palette has changed</strong>
-              <p className="stale-desc">The contrast results below reflect your previous snapshot. Refresh to test your updated colors.</p>
+              <p className="stale-desc">
+                The contrast results below reflect your previous snapshot. Refresh to test your updated colors.
+              </p>
             </div>
           </div>
-          <button
-            type="button"
-            className="stale-refresh-btn"
-            onClick={handleRefreshClick}
-          >
+          <button type="button" className="stale-refresh-btn" onClick={handleRefreshClick}>
             <RefreshIcon size={14} spinning={isRefreshing} />
             <span>Refresh Results</span>
           </button>
@@ -147,7 +174,11 @@ export function ContrastChecker({
             </div>
             <div className="stat-card">
               <span className="stat-label">WCAG AA Pass Rate</span>
-              <span className={`stat-number font-mono ${passRate >= 70 ? "text-success" : passRate >= 40 ? "text-warning" : "text-danger"}}`}>
+              <span
+                className={`stat-number font-mono ${
+                  passRate >= 70 ? "text-success" : passRate >= 40 ? "text-warning" : "text-danger"
+                }`}
+              >
                 {passRate}%
               </span>
               <span className="stat-sub">{passingAaCount} of {totalCount} pairs</span>
@@ -196,7 +227,9 @@ export function ContrastChecker({
             </div>
 
             <div className="sort-controls">
-              <label htmlFor="contrast-sort" className="sort-label">Sort by:</label>
+              <label htmlFor="contrast-sort" className="sort-label">
+                Sort by:
+              </label>
               <select
                 id="contrast-sort"
                 className="sort-select"
@@ -213,20 +246,17 @@ export function ContrastChecker({
       </section>
 
       <section className="contrast-list-section" aria-label="Contrast Pairs Results">
-        {(!snapshotPalette || snapshotPalette.length < 2) ? (
+        {!snapshotPalette || snapshotPalette.length < 2 ? (
           <div className="contrast-empty-card">
             <div className="empty-icon-wrap">
               <EyeIcon size={22} />
             </div>
             <h3 className="empty-title">Need at least 2 colors to check contrast</h3>
             <p className="empty-desc">
-              Your snapshot currently has {snapshotPalette ? snapshotPalette.length : 0} color(s). Add at least two colors to your palette and click Refresh to test every combination.
+              Your snapshot currently has {snapshotPalette ? snapshotPalette.length : 0} color(s). Add at least two
+              colors to your palette and click Refresh to test every combination.
             </p>
-            <button
-              type="button"
-              className="load-starter-cta"
-              onClick={onSwitchToPalette}
-            >
+            <button type="button" className="load-starter-cta" onClick={onSwitchToPalette}>
               <SparklesIcon size={15} />
               <span>Go to Color Palette</span>
             </button>
@@ -234,11 +264,7 @@ export function ContrastChecker({
         ) : filteredPairs.length === 0 ? (
           <div className="no-filter-results">
             <p>No contrast pairs match the selected filter.</p>
-            <button
-              type="button"
-              className="reset-filter-btn"
-              onClick={() => setFilterMode("all")}
-            >
+            <button type="button" className="reset-filter-btn" onClick={() => setFilterMode("all")}>
               Show All Pairs
             </button>
           </div>
@@ -254,10 +280,7 @@ export function ContrastChecker({
                       <div className="color-id-item">
                         <span className="id-label">BACKGROUND</span>
                         <div className="id-swatch-wrap">
-                          <span
-                            className="id-color-dot"
-                            style={{ backgroundColor: pair.bgHex }}
-                          />
+                          <span className="id-color-dot" style={{ backgroundColor: pair.bgHex }} />
                           <span className="id-hex font-mono">{pair.bgHex}</span>
                         </div>
                       </div>
@@ -267,10 +290,7 @@ export function ContrastChecker({
                       <div className="color-id-item">
                         <span className="id-label">TEXT</span>
                         <div className="id-swatch-wrap">
-                          <span
-                            className="id-color-dot"
-                            style={{ backgroundColor: pair.fgHex }}
-                          />
+                          <span className="id-color-dot" style={{ backgroundColor: pair.fgHex }} />
                           <span className="id-hex font-mono">{pair.fgHex}</span>
                         </div>
                       </div>
@@ -341,17 +361,13 @@ export function ContrastChecker({
                     style={{ backgroundColor: pair.bgHex, color: pair.fgHex }}
                   >
                     <div className="preview-content">
-                      <p className="sample-sentence-large">
-                        The quick brown fox jumps over the lazy dog
-                      </p>
+                      <p className="sample-sentence-large">The quick brown fox jumps over the lazy dog</p>
                       <p className="sample-sentence-normal">
                         The quick brown fox jumps over the lazy dog. 1234567890 &amp; @#$
                       </p>
                       <div className="sample-ui-elements">
                         <InteractivePreviewButton bgHex={pair.bgHex} fgHex={pair.fgHex} />
-                        <span className="sample-caption-text">
-                          Sample caption (12px text)
-                        </span>
+                        <span className="sample-caption-text">Sample caption (12px text)</span>
                       </div>
                     </div>
 

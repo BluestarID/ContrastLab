@@ -1,10 +1,10 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { DEFAULT_PALETTE, TABS } from "./types.js";
 import { normalizeHex } from "./utils/colorMath.js";
-import { Header } from "./components/Header.js";
-import { SidebarGenerator } from "./components/SidebarGenerator.js";
-import { PaletteManager } from "./components/PaletteManager.js";
-import { ContrastChecker } from "./components/ContrastChecker.js";
+import { Header } from "./components/Header.jsx";
+import { SidebarGenerator } from "./components/SidebarGenerator.jsx";
+import { PaletteManager } from "./components/PaletteManager.jsx";
+import { ContrastChecker } from "./components/ContrastChecker.jsx";
 
 /**
  * Checks if two palette arrays have different colors or order
@@ -23,7 +23,7 @@ function arePalettesDifferent(p1, p2) {
 export function App() {
   const [activeTab, setActiveTab] = useState(TABS.PALETTE);
   const [palette, setPalette] = useState(DEFAULT_PALETTE);
-  
+
   // Snapshot palette specifically for Contrast Checker
   // Does NOT auto-update when palette changes; only updates on explicit Refresh
   const [snapshotPalette, setSnapshotPalette] = useState(DEFAULT_PALETTE);
@@ -42,8 +42,8 @@ export function App() {
       {
         id: `col-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
         hex: normalized,
-        name: `Color ${prev.length + 1}`
-      }
+        name: `Color ${prev.length + 1}`,
+      },
     ]);
   }, []);
 
@@ -79,7 +79,7 @@ export function App() {
     const newItems = colorHexes.map((hex, idx) => ({
       id: `preset-${Date.now()}-${idx}`,
       hex: normalizeHex(hex) || "#307CFF",
-      name: `Preset ${idx + 1}`
+      name: `Preset ${idx + 1}`,
     }));
     setPalette(newItems);
   }, []);
@@ -137,3 +137,5 @@ export function App() {
     </div>
   );
 }
+
+export default App;

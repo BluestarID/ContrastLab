@@ -5,7 +5,7 @@ import {
   hexToRgb,
   formatRgb,
   isLightColor,
-  getRelativeLuminance
+  getRelativeLuminance,
 } from "../utils/colorMath.js";
 import { STARTER_PRESETS } from "../types.js";
 import {
@@ -16,8 +16,8 @@ import {
   CopyIcon,
   CheckIcon,
   SparklesIcon,
-  LayersIcon
-} from "./Icons.js";
+  LayersIcon,
+} from "./Icons.jsx";
 
 export function PaletteManager({
   palette,
@@ -26,7 +26,7 @@ export function PaletteManager({
   onUpdateColor,
   onReorderColor,
   onLoadPreset,
-  onClearPalette
+  onClearPalette,
 }) {
   const [inputHex, setInputHex] = useState("#307CFF");
   const [pickerHex, setPickerHex] = useState("#307CFF");
@@ -78,17 +78,20 @@ export function PaletteManager({
       <section className="palette-input-section" aria-label="Add New Color">
         <form className="palette-input-form" onSubmit={handleAdd}>
           <div className="input-group">
-            <div className="color-preview-trigger" style={{ backgroundColor: isValidHex(inputHex) ? (normalizeHex(inputHex) || "#FFFFFF") : "#E2E8F0" }}>
+            <div
+              className="color-preview-trigger"
+              style={{ backgroundColor: isValidHex(inputHex) ? normalizeHex(inputHex) || "#FFFFFF" : "#E2E8F0" }}
+            >
               <input
                 type="color"
                 className="native-color-input"
-                value={isValidHex(inputHex) ? (normalizeHex(inputHex) || "#307CFF") : "#307CFF"}
+                value={isValidHex(inputHex) ? normalizeHex(inputHex) || "#307CFF" : "#307CFF"}
                 onChange={handlePickerChange}
                 aria-label="Pick color visually"
                 title="Click to open color picker"
               />
             </div>
-            
+
             <div className="hex-input-wrap">
               <span className="hex-prefix">#</span>
               <input
@@ -102,19 +105,13 @@ export function PaletteManager({
               />
             </div>
 
-            <button
-              type="submit"
-              className="primary-add-btn"
-              disabled={!isValidHex(inputHex)}
-            >
+            <button type="submit" className="primary-add-btn" disabled={!isValidHex(inputHex)}>
               <PlusIcon size={15} />
               <span>Add to Palette</span>
             </button>
           </div>
 
-          {inputError && (
-            <div className="input-error-msg" role="alert">{inputError}</div>
-          )}
+          {inputError && <div className="input-error-msg" role="alert">{inputError}</div>}
         </form>
 
         <div className="presets-bar">
@@ -196,14 +193,8 @@ export function PaletteManager({
               const isLight = isLightColor(hex);
 
               return (
-                <div
-                  key={item.id || `${hex}-${index}`}
-                  className="palette-color-card"
-                >
-                  <div
-                    className="palette-swatch-box"
-                    style={{ backgroundColor: hex }}
-                  >
+                <div key={item.id || `${hex}-${index}`} className="palette-color-card">
+                  <div className="palette-swatch-box" style={{ backgroundColor: hex }}>
                     <div className="card-top-overlay">
                       <div className="card-reorder-controls">
                         <button
@@ -251,7 +242,7 @@ export function PaletteManager({
                       </div>
                     </div>
 
-                    {/* Dynamic High-Contrast Swatch Index Tag */}
+                    {/* High-contrast order label */}
                     <div className={`swatch-center-label ${isLight ? "dark-badge" : "light-badge"}`}>
                       <span className="swatch-index-tag">#{index + 1}</span>
                     </div>

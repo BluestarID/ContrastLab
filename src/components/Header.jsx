@@ -1,6 +1,6 @@
 import React from "react";
 import { TABS } from "../types.js";
-import { LayersIcon, EyeIcon } from "./Icons.js";
+import { LayersIcon, EyeIcon } from "./Icons.jsx";
 
 export function Header({ activeTab, setActiveTab, paletteCount, isStale }) {
   return (
@@ -51,7 +51,9 @@ export function Header({ activeTab, setActiveTab, paletteCount, isStale }) {
         </nav>
       </div>
 
-      <div className="header-right" aria-hidden="true" />
+      <div className="header-right">
+        {/* Clean right header area */}
+      </div>
     </header>
   );
 }

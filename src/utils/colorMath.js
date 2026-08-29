@@ -6,7 +6,7 @@ export function normalizeHex(hex) {
   if (!hex || typeof hex !== "string") return null;
   let clean = hex.trim().replace(/^#/, "");
   if (clean.length === 3) {
-    clean = clean.split("").map(c => c + c).join("");
+    clean = clean.split("").map((c) => c + c).join("");
   }
   if (!/^[0-9A-Fa-f]{6}$/.test(clean)) {
     return null;
@@ -25,7 +25,7 @@ export function hexToRgb(hex) {
   return {
     r: (num >> 16) & 255,
     g: (num >> 8) & 255,
-    b: num & 255
+    b: num & 255,
   };
 }
 
@@ -73,7 +73,7 @@ export function rgbToHsl(r, g, b) {
   return {
     h: Math.round(((h % 1 + 1) % 1) * 360),
     s: Math.round(s * 100),
-    l: Math.round(l * 100)
+    l: Math.round(l * 100),
   };
 }
 
@@ -105,7 +105,7 @@ export function hslToRgb(h, s, l) {
   return {
     r: Math.max(0, Math.min(255, Math.round((rPrime + m) * 255))),
     g: Math.max(0, Math.min(255, Math.round((gPrime + m) * 255))),
-    b: Math.max(0, Math.min(255, Math.round((bPrime + m) * 255)))
+    b: Math.max(0, Math.min(255, Math.round((bPrime + m) * 255))),
   };
 }
 
@@ -165,13 +165,15 @@ export function evaluateWCAG(ratio) {
     aaLarge,
     aaaNormal,
     aaaLarge,
-    overallPass: aaNormal
+    overallPass: aaNormal,
   };
 }
 
 /**
- * True when dark text/labels will contrast better than light ones on this swatch.
+ * Checks if a color is perceived as visually light using WCAG relative luminance.
+ * Mathematical threshold of ~0.20 provides optimal contrast for dark text on light backgrounds.
  */
 export function isLightColor(hex) {
-  return getContrastRatio(hex, "#0F172A") >= getContrastRatio(hex, "#FFFFFF");
+  const { r, g, b } = hexToRgb(hex);
+  return getRelativeLuminance(r, g, b) > 0.20;
 }
