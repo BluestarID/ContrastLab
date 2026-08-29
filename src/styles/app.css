@@ -537,7 +537,7 @@
       gap: 10px;
       flex: 1 1 auto;
       min-height: 0;
-      overflow: hidden;
+      overflow: visible;
     }
 
     .swatches-header {
@@ -565,6 +565,8 @@
       min-height: 0;
       overflow-y: auto;
       align-content: start;
+      padding: 4px 2px 2px 2px;
+      margin: -4px -2px 0 -2px;
     }
 
     .generator-swatch-card {
@@ -580,6 +582,7 @@
     .generator-swatch-card:hover {
       transform: translateY(-2px);
       box-shadow: var(--shadow-md);
+      z-index: 5;
     }
 
     .swatch-card-content {
@@ -956,6 +959,221 @@
 
     .clear-palette-btn:hover {
       background-color: var(--color-fail-bg);
+    }
+
+    
+    /* ==========================================================================
+       Saved Palettes Bar & Chips (LocalStorage Persistence)
+       ========================================================================== */
+    .saved-palettes-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border-top: 1px solid var(--border-light);
+      padding-top: 12px;
+    }
+
+    .saved-bar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .saved-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .saved-bar-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .saved-actions-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .save-success-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #15803D;
+      background-color: #DCFCE7;
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+      animation: fadeIn 0.2s ease;
+    }
+
+    .save-palette-trigger-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      transition: all 0.15s ease;
+    }
+
+    .save-palette-trigger-btn:hover:not(:disabled) {
+      background-color: var(--accent-subtle);
+      border-color: var(--accent-border);
+      color: var(--accent-primary);
+      transform: translateY(-1px);
+    }
+
+    .save-palette-trigger-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .save-palette-inline-form {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .save-palette-input {
+      padding: 3px 8px;
+      font-size: 0.76rem;
+      border: 1px solid var(--accent-primary);
+      border-radius: var(--radius-sm);
+      outline: none;
+      background-color: #FFFFFF;
+      min-width: 140px;
+      box-shadow: var(--shadow-focus);
+    }
+
+    .save-confirm-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 4px 9px;
+      background-color: var(--accent-primary);
+      color: #FFFFFF;
+      font-size: 0.74rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+    }
+
+    .save-confirm-btn:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .save-cancel-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+    }
+
+    .save-cancel-btn:hover {
+      color: var(--color-fail-text);
+      background-color: var(--color-fail-bg);
+    }
+
+    .saved-palettes-list {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .saved-palette-chip {
+      display: inline-flex;
+      align-items: center;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      box-shadow: var(--shadow-xs);
+      transition: all 0.15s ease;
+    }
+
+    .saved-palette-chip:hover {
+      border-color: var(--border-medium);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .saved-chip-load-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 9px 5px 10px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .saved-chip-load-btn:hover {
+      color: var(--text-primary);
+      background-color: var(--bg-subtle);
+    }
+
+    .saved-chip-dots {
+      display: flex;
+      gap: 2.5px;
+    }
+
+    .saved-chip-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: 0.5px solid rgba(0, 0, 0, 0.12);
+    }
+
+    .saved-chip-name {
+      font-weight: 600;
+      max-width: 140px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .saved-chip-count {
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      background: rgba(15, 23, 42, 0.08);
+      padding: 1px 5px;
+      border-radius: var(--radius-full);
+      color: var(--text-muted);
+    }
+
+    .saved-chip-del-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 100%;
+      padding: 5px 6px;
+      color: var(--text-muted);
+      border-left: 1px solid var(--border-light);
+      cursor: pointer;
+    }
+
+    .saved-chip-del-btn:hover {
+      color: var(--color-fail-text);
+      background-color: var(--color-fail-bg);
+    }
+
+    .saved-empty-hint {
+      font-size: 0.74rem;
+      color: var(--text-subtle);
+      line-height: 1.4;
     }
 
     /* Palette Grid Section */

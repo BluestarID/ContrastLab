@@ -1,6 +1,12 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { DEFAULT_PALETTE, TABS } from "./types.js";
 import { normalizeHex } from "./utils/colorMath.js";
+import {
+  loadSavedPalettes,
+  saveSavedPalettes,
+  loadActivePalette,
+  saveActivePalette,
+} from "./utils/storage.js";
 import { Header } from "./components/Header.jsx";
 import { SidebarGenerator } from "./components/SidebarGenerator.jsx";
 import { PaletteManager } from "./components/PaletteManager.jsx";
@@ -22,11 +28,17 @@ function arePalettesDifferent(p1, p2) {
 
 export function App() {
   const [activeTab, setActiveTab] = useState(TABS.PALETTE);
-  const [palette, setPalette] = useState(DEFAULT_PALETTE);
+  const [palette, setPalette] = useState(() => loadActivePalette(DEFAULT_PALETTE));
+  const [savedPalettes, setSavedPalettes] = useState(() => loadSavedPalettes());
 
   // Snapshot palette specifically for Contrast Checker
   // Does NOT auto-update when palette changes; only updates on explicit Refresh
-  const [snapshotPalette, setSnapshotPalette] = useState(DEFAULT_PALETTE);
+  const [snapshotPalette, setSnapshotPalette] = useState(() => loadActivePalette(DEFAULT_PALETTE));
+
+  // Sync active palette changes to localStorage
+  useEffect(() => {
+    saveActivePalette(palette);
+  }, [palette]);
 
   // Stale detection
   const isStale = useMemo(() => {
@@ -89,6 +101,44 @@ export function App() {
     setPalette([]);
   }, []);
 
+  // Save current palette to browser storage
+  const handleSavePalette = useCallback(
+    (customName) => {
+      if (!palette || palette.length === 0) return;
+      const name = customName?.trim() || `Palette ${savedPalettes.length + 1}`;
+      const newEntry = {
+        id: `saved-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+        name,
+        createdAt: Date.now(),
+        colors: palette.map((p) => p.hex),
+      };
+      const updated = [newEntry, ...savedPalettes];
+      setSavedPalettes(updated);
+      saveSavedPalettes(updated);
+    },
+    [palette, savedPalettes]
+  );
+
+  // Delete saved palette from browser storage
+  const handleDeleteSavedPalette = useCallback(
+    (id) => {
+      const updated = savedPalettes.filter((p) => p.id !== id);
+      setSavedPalettes(updated);
+      saveSavedPalettes(updated);
+    },
+    [savedPalettes]
+  );
+
+  // Load saved palette
+  const handleLoadSavedPalette = useCallback((colorHexes) => {
+    const newItems = colorHexes.map((hex, idx) => ({
+      id: `saved-col-${Date.now()}-${idx}`,
+      hex: normalizeHex(hex) || "#307CFF",
+      name: `Color ${idx + 1}`,
+    }));
+    setPalette(newItems);
+  }, []);
+
   // Explicit refresh of the Contrast Checker snapshot
   const handleRefreshSnapshot = useCallback(() => {
     setSnapshotPalette([...palette]);
@@ -123,6 +173,10 @@ export function App() {
               onReorderColor={handleReorderColor}
               onLoadPreset={handleLoadPreset}
               onClearPalette={handleClearPalette}
+              savedPalettes={savedPalettes}
+              onSavePalette={handleSavePalette}
+              onDeleteSavedPalette={handleDeleteSavedPalette}
+              onLoadSavedPalette={handleLoadSavedPalette}
             />
           ) : (
             <ContrastChecker

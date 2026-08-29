@@ -140,10 +140,7 @@ export function SidebarGenerator({ palette, onAddColor }) {
                       aria-label={`Add ${swatch.hex} to palette`}
                     >
                       {isAdded ? (
-                        <>
-                          <CheckIcon size={13} />
-                          <span className="btn-label">Added</span>
-                        </>
+                        <CheckIcon size={13} />
                       ) : (
                         <>
                           <PlusIcon size={13} />

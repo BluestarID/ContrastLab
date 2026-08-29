@@ -32,6 +32,10 @@ ContrastLab helps designers, developers, and design-system engineers create acce
   - *Modern SaaS*
   - *Warm Editorial*
   - *High Contrast*
+- **Saved Palettes (Browser Storage)**:
+  - **Save Current Palette**: Store custom palettes locally in your browser with custom names.
+  - **1-Click Load & Manage**: Instant loading into the active canvas with color preview dots, color count, and one-click deletion.
+  - **Session Persistence**: Active palette is automatically preserved across browser refreshes.
 - **Card Controls**:
   - Unobtrusive monospace displays for `#HEX`, `rgb(r, g, b)`, and Relative Luminance ($L$).
   - 1-click clipboard copy with animated visual feedback.

@@ -17,6 +17,9 @@ import {
   AlertCircle,
   Eye,
   Layers,
+  Bookmark,
+  Save,
+  FolderHeart,
 } from "lucide-react";
 
 export function CheckIcon({ className = "", size = 16, width, height, "aria-hidden": ariaHidden = true }) {
@@ -84,6 +87,21 @@ export function LayersIcon({ className = "", size = 16, width, height, "aria-hid
   return <Layers className={`app-icon ${className}`} size={s} strokeWidth={2} aria-hidden={ariaHidden} />;
 }
 
+export function BookmarkIcon({ className = "", size = 16, width, height, "aria-hidden": ariaHidden = true }) {
+  const s = width || height || size;
+  return <Bookmark className={`app-icon ${className}`} size={s} strokeWidth={2} aria-hidden={ariaHidden} />;
+}
+
+export function SaveIcon({ className = "", size = 16, width, height, "aria-hidden": ariaHidden = true }) {
+  const s = width || height || size;
+  return <Save className={`app-icon ${className}`} size={s} strokeWidth={2} aria-hidden={ariaHidden} />;
+}
+
+export function FolderIcon({ className = "", size = 16, width, height, "aria-hidden": ariaHidden = true }) {
+  const s = width || height || size;
+  return <FolderHeart className={`app-icon ${className}`} size={s} strokeWidth={2} aria-hidden={ariaHidden} />;
+}
+
 export {
   Check,
   X,
@@ -98,4 +116,7 @@ export {
   AlertCircle,
   Eye,
   Layers,
+  Bookmark,
+  Save,
+  FolderHeart,
 };

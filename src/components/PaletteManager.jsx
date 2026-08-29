@@ -17,6 +17,9 @@ import {
   CheckIcon,
   SparklesIcon,
   LayersIcon,
+  BookmarkIcon,
+  SaveIcon,
+  CrossIcon,
 } from "./Icons.jsx";
 
 export function PaletteManager({
@@ -27,11 +30,20 @@ export function PaletteManager({
   onReorderColor,
   onLoadPreset,
   onClearPalette,
+  savedPalettes = [],
+  onSavePalette,
+  onDeleteSavedPalette,
+  onLoadSavedPalette,
 }) {
   const [inputHex, setInputHex] = useState("#307CFF");
   const [pickerHex, setPickerHex] = useState("#307CFF");
   const [copiedKey, setCopiedKey] = useState(null);
   const [inputError, setInputError] = useState("");
+
+  // State for Saving Palette flow
+  const [isSavingPalette, setIsSavingPalette] = useState(false);
+  const [paletteSaveName, setPaletteSaveName] = useState("");
+  const [saveSuccessMsg, setSaveSuccessMsg] = useState("");
 
   const handleInputChange = (e) => {
     const val = e.target.value;
@@ -71,6 +83,26 @@ export function PaletteManager({
     navigator.clipboard?.writeText(text);
     setCopiedKey(key);
     setTimeout(() => setCopiedKey(null), 1500);
+  };
+
+  const handleTriggerSave = () => {
+    if (!palette || palette.length === 0) return;
+    setIsSavingPalette(true);
+    setPaletteSaveName(`Palette ${savedPalettes.length + 1}`);
+  };
+
+  const handleConfirmSave = (e) => {
+    e.preventDefault();
+    if (!palette || palette.length === 0) return;
+    onSavePalette(paletteSaveName);
+    setIsSavingPalette(false);
+    setSaveSuccessMsg("Saved to browser!");
+    setTimeout(() => setSaveSuccessMsg(""), 2000);
+  };
+
+  const handleCancelSave = () => {
+    setIsSavingPalette(false);
+    setPaletteSaveName("");
   };
 
   return (
@@ -114,6 +146,7 @@ export function PaletteManager({
           {inputError && <div className="input-error-msg" role="alert">{inputError}</div>}
         </form>
 
+        {/* Starter Presets Bar */}
         <div className="presets-bar">
           <span className="presets-title">Starter Presets:</span>
           <div className="preset-buttons">
@@ -145,6 +178,93 @@ export function PaletteManager({
               </button>
             )}
           </div>
+        </div>
+
+        {/* Saved Palettes Bar */}
+        <div className="saved-palettes-bar">
+          <div className="saved-bar-header">
+            <div className="saved-title-wrap">
+              <BookmarkIcon size={14} className="text-accent" />
+              <span className="saved-bar-title">Saved Palettes ({savedPalettes.length})</span>
+            </div>
+
+            {!isSavingPalette ? (
+              <div className="saved-actions-wrap">
+                {saveSuccessMsg && <span className="save-success-tag">{saveSuccessMsg}</span>}
+                <button
+                  type="button"
+                  className="save-palette-trigger-btn"
+                  onClick={handleTriggerSave}
+                  disabled={!palette || palette.length === 0}
+                  title="Save active palette to your browser storage"
+                >
+                  <SaveIcon size={13} />
+                  <span>Save Current Palette</span>
+                </button>
+              </div>
+            ) : (
+              <form className="save-palette-inline-form" onSubmit={handleConfirmSave}>
+                <input
+                  type="text"
+                  className="save-palette-input"
+                  value={paletteSaveName}
+                  onChange={(e) => setPaletteSaveName(e.target.value)}
+                  placeholder="Palette Name"
+                  maxLength={30}
+                  autoFocus
+                />
+                <button type="submit" className="save-confirm-btn" title="Save">
+                  <CheckIcon size={13} />
+                  <span>Save</span>
+                </button>
+                <button
+                  type="button"
+                  className="save-cancel-btn"
+                  onClick={handleCancelSave}
+                  title="Cancel"
+                >
+                  <CrossIcon size={13} />
+                </button>
+              </form>
+            )}
+          </div>
+
+          {savedPalettes.length > 0 ? (
+            <div className="saved-palettes-list">
+              {savedPalettes.map((saved) => (
+                <div key={saved.id} className="saved-palette-chip">
+                  <button
+                    type="button"
+                    className="saved-chip-load-btn"
+                    onClick={() => onLoadSavedPalette(saved.colors)}
+                    title={`Load "${saved.name}" (${saved.colors.length} colors)`}
+                  >
+                    <div className="saved-chip-dots">
+                      {saved.colors.slice(0, 5).map((c, i) => (
+                        <span key={i} className="saved-chip-dot" style={{ backgroundColor: c }} />
+                      ))}
+                    </div>
+                    <span className="saved-chip-name">{saved.name}</span>
+                    <span className="saved-chip-count">{saved.colors.length}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="saved-chip-del-btn"
+                    onClick={() => onDeleteSavedPalette(saved.id)}
+                    title={`Delete "${saved.name}"`}
+                    aria-label={`Delete "${saved.name}"`}
+                  >
+                    <CrossIcon size={11} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="saved-empty-hint">
+              No custom palettes saved yet. Click <strong>Save Current Palette</strong> to store your color set locally in your browser.
+            </p>
+          )}
         </div>
       </section>
 
