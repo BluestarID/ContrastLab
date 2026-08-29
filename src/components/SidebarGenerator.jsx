@@ -11,22 +11,26 @@ export function SidebarGenerator({ palette, onAddColor }) {
   const [recentlyAddedId, setRecentlyAddedId] = useState(null);
   const [isShuffling, setIsShuffling] = useState(false);
 
-  const handleGenerate = useCallback(() => {
+  const paletteRef = React.useRef(palette);
+  paletteRef.current = palette;
+
+  const handleGenerate = useCallback((targetBias) => {
+    const activeBias = targetBias || biasMode;
     setIsShuffling(true);
-    const newSwatches = generateHarmoniousPalette(palette, biasMode, 8);
+    const newSwatches = generateHarmoniousPalette(paletteRef.current, activeBias, 8);
     setSwatches(newSwatches);
     setTimeout(() => setIsShuffling(false), 200);
-  }, [palette, biasMode]);
+  }, [biasMode]);
 
+  // Initial generation on mount only
   useEffect(() => {
-    handleGenerate();
-  }, [biasMode, handleGenerate]);
+    handleGenerate(biasMode);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(() => {
-    if (swatches.length === 0) {
-      handleGenerate();
-    }
-  }, [palette, handleGenerate, swatches.length]);
+  const handleBiasSelect = (filterId) => {
+    setBiasMode(filterId);
+    handleGenerate(filterId);
+  };
 
   const handleCopy = (hex, e) => {
     e.stopPropagation();
@@ -68,7 +72,7 @@ export function SidebarGenerator({ palette, onAddColor }) {
                 key={filter.id}
                 type="button"
                 className={`bias-chip ${biasMode === filter.id ? "active" : ""}`}
-                onClick={() => setBiasMode(filter.id)}
+                onClick={() => handleBiasSelect(filter.id)}
                 title={filter.desc}
                 aria-pressed={biasMode === filter.id}
               >
@@ -81,7 +85,7 @@ export function SidebarGenerator({ palette, onAddColor }) {
         <button
           type="button"
           className={`generate-btn ${isShuffling ? "shuffling" : ""}`}
-          onClick={handleGenerate}
+          onClick={() => handleGenerate(biasMode)}
           title="Roll fresh harmonious color suggestions"
         >
           <ShuffleIcon size={16} />
