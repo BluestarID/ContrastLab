@@ -1,0 +1,105 @@
+/* ==========================================================================
+   ContrastLab - Design Tokens & Global Styles
+   ========================================================================== */
+
+:root {
+  /* Core Brand Tokens */
+  --bg-primary: #FFFFFF;
+  --bg-surface: #F8FAFC;
+  --bg-subtle: #F1F5F9;
+  --bg-card: #FFFFFF;
+  --bg-sidebar: #FFFFFF;
+
+  --accent-primary: #307CFF;
+  --accent-hover: #1E68EB;
+  --accent-active: #1555C7;
+  --accent-subtle: #EFF6FF;
+  --accent-border: #BFDBFE;
+
+  /* Neutrals */
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
+  --text-subtle: #94A3B8;
+
+  --border-light: #E2E8F0;
+  --border-medium: #CBD5E1;
+  --border-dark: #94A3B8;
+
+  /* Semantic Feedback */
+  --color-pass-text: #15803D;
+  --color-pass-bg: #DCFCE7;
+  --color-pass-border: #86EFAC;
+
+  --color-fail-text: #B91C1C;
+  --color-fail-bg: #FEE2E2;
+  --color-fail-border: #FCA5A5;
+
+  --color-warn-text: #B45309;
+  --color-warn-bg: #FEF3C7;
+  --color-warn-border: #FCD34D;
+
+  /* Elevation & Shadows */
+  --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.08), 0 1px 2px -1px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+  --shadow-focus: 0 0 0 3px rgba(48, 124, 255, 0.28);
+
+  /* Typography & Sizing */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* Sidebar width & Header */
+  --sidebar-width: 320px;
+  --header-height: 64px;
+}
+
+/* Reset & Box Sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Global Typography & Focus Defaults */
+:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: all 0.15s ease-in-out;
+}
+
+input,
+select {
+  font-family: inherit;
+}

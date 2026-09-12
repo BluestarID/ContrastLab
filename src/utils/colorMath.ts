@@ -1,8 +1,9 @@
 /**
  * WCAG 2.1 Contrast & Color Math Utilities
  */
+import { RgbColor, HslColor, WCAGResult } from "../types";
 
-export function normalizeHex(hex) {
+export function normalizeHex(hex: unknown): string | null {
   if (!hex || typeof hex !== "string") return null;
   let clean = hex.trim().replace(/^#/, "");
   if (clean.length === 3) {
@@ -14,11 +15,11 @@ export function normalizeHex(hex) {
   return "#" + clean.toUpperCase();
 }
 
-export function isValidHex(hex) {
+export function isValidHex(hex: unknown): boolean {
   return normalizeHex(hex) !== null;
 }
 
-export function hexToRgb(hex) {
+export function hexToRgb(hex: string): RgbColor {
   const normalized = normalizeHex(hex);
   if (!normalized) return { r: 0, g: 0, b: 0 };
   const num = parseInt(normalized.slice(1), 16);
@@ -29,20 +30,20 @@ export function hexToRgb(hex) {
   };
 }
 
-export function rgbToHex(r, g, b) {
-  const clamp = (val) => Math.max(0, Math.min(255, Math.round(val)));
-  const toHex = (val) => clamp(val).toString(16).padStart(2, "0").toUpperCase();
+export function rgbToHex(r: number, g: number, b: number): string {
+  const clamp = (val: number): number => Math.max(0, Math.min(255, Math.round(val)));
+  const toHex = (val: number): string => clamp(val).toString(16).padStart(2, "0").toUpperCase();
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
-export function formatRgb(r, g, b) {
+export function formatRgb(r: number | RgbColor, g?: number, b?: number): string {
   if (typeof r === "object" && r !== null) {
     return `rgb(${Math.round(r.r)}, ${Math.round(r.g)}, ${Math.round(r.b)})`;
   }
-  return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
+  return `rgb(${Math.round(r)}, ${Math.round(g ?? 0)}, ${Math.round(b ?? 0)})`;
 }
 
-export function rgbToHsl(r, g, b) {
+export function rgbToHsl(r: number, g: number, b: number): HslColor {
   const rNorm = r / 255;
   const gNorm = g / 255;
   const bNorm = b / 255;
@@ -77,16 +78,18 @@ export function rgbToHsl(r, g, b) {
   };
 }
 
-export function hslToRgb(h, s, l) {
+export function hslToRgb(h: number, s: number, l: number): RgbColor {
   h = ((h % 360) + 360) % 360;
-  s = Math.max(0, Math.min(100, s)) / 100;
-  l = Math.max(0, Math.min(100, l)) / 100;
+  const sNorm = Math.max(0, Math.min(100, s)) / 100;
+  const lNorm = Math.max(0, Math.min(100, l)) / 100;
 
-  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const c = (1 - Math.abs(2 * lNorm - 1)) * sNorm;
   const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
-  const m = l - c / 2;
+  const m = lNorm - c / 2;
 
-  let rPrime = 0, gPrime = 0, bPrime = 0;
+  let rPrime = 0;
+  let gPrime = 0;
+  let bPrime = 0;
 
   if (h >= 0 && h < 60) {
     rPrime = c; gPrime = x; bPrime = 0;
@@ -109,18 +112,18 @@ export function hslToRgb(h, s, l) {
   };
 }
 
-export function hexToHsl(hex) {
+export function hexToHsl(hex: string): HslColor {
   const { r, g, b } = hexToRgb(hex);
   return rgbToHsl(r, g, b);
 }
 
-export function hslToHex(h, s, l) {
+export function hslToHex(h: number, s: number, l: number): string {
   const { r, g, b } = hslToRgb(h, s, l);
   return rgbToHex(r, g, b);
 }
 
-export function getRelativeLuminance(r, g, b) {
-  const toLinear = (c) => {
+export function getRelativeLuminance(r: number, g: number, b: number): number {
+  const toLinear = (c: number): number => {
     const norm = c / 255;
     if (norm <= 0.03928) {
       return norm / 12.92;
@@ -135,7 +138,7 @@ export function getRelativeLuminance(r, g, b) {
   return 0.2126 * rLinear + 0.7152 * gLinear + 0.0722 * bLinear;
 }
 
-export function getContrastRatio(color1Hex, color2Hex) {
+export function getContrastRatio(color1Hex: string, color2Hex: string): number {
   const rgb1 = hexToRgb(color1Hex);
   const rgb2 = hexToRgb(color2Hex);
 
@@ -148,11 +151,11 @@ export function getContrastRatio(color1Hex, color2Hex) {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
-export function formatRatio(ratio) {
+export function formatRatio(ratio: number): string {
   return `${ratio.toFixed(2)}:1`;
 }
 
-export function evaluateWCAG(ratio) {
+export function evaluateWCAG(ratio: number): WCAGResult {
   const aaNormal = ratio >= 4.5;
   const aaLarge = ratio >= 3.0;
   const aaaNormal = ratio >= 7.0;
@@ -173,7 +176,7 @@ export function evaluateWCAG(ratio) {
  * Checks if a color is perceived as visually light using WCAG relative luminance.
  * Mathematical threshold of ~0.20 provides optimal contrast for dark text on light backgrounds.
  */
-export function isLightColor(hex) {
+export function isLightColor(hex: string): boolean {
   const { r, g, b } = hexToRgb(hex);
   return getRelativeLuminance(r, g, b) > 0.20;
 }
